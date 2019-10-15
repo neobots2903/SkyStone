@@ -42,10 +42,10 @@ public class Hardware9330 {
         //rightBack.setDirection(DcMotor.Direction.REVERSE);
         leftBack.setMode(DcMotor.RunMode.RUN_WITHOUT_ENCODER);
 
-        intakeLeft = hwMap.dcMotor.get("intakeLeft");
-        intakeRight = hwMap.dcMotor.get("intakeRight");
-
-        teleskop = hwMap.dcMotor.get("teleskop");
+//        intakeLeft = hwMap.dcMotor.get("intakeLeft");
+//        intakeRight = hwMap.dcMotor.get("intakeRight");
+//
+//        teleskop = hwMap.dcMotor.get("teleskop");
 
 
     }

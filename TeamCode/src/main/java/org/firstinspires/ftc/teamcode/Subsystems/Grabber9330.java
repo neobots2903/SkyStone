@@ -4,8 +4,8 @@ import org.firstinspires.ftc.teamcode.Hardware9330;
 
 public class Grabber9330 {
 
-    final double RETRACTED_POS = 0.12;
-    final double EXTENDED_POS = 0.79;
+    final double RETRACTED_POS = 1;
+    final double EXTENDED_POS = 0;
 
     private Hardware9330 hwMap = null;
 
@@ -28,12 +28,12 @@ public class Grabber9330 {
     public void toggle(){
 
         hwMap.grabber.getPosition();
-        if (hwMap.grabber.getPosition() == EXTENDED_POS){
+        if (hwMap.grabber.getPosition() < 0.5){
 
             retract();
 
         }
-        else if(hwMap.grabber.getPosition() == RETRACTED_POS){
+        else if(hwMap.grabber.getPosition() >= 0.5){
 
             extend();
 
@@ -42,6 +42,6 @@ public class Grabber9330 {
     }
 
     public void init(){
-        hwMap.grabber.setPosition(0.2);
+        hwMap.grabber.setPosition(0);
     }
 }
