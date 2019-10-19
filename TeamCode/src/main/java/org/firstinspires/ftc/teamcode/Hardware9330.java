@@ -1,5 +1,6 @@
 package org.firstinspires.ftc.teamcode;
 
+import com.qualcomm.hardware.bosch.BNO055IMU;
 import com.qualcomm.robotcore.hardware.DcMotor;
 import com.qualcomm.robotcore.hardware.HardwareMap;
 import com.qualcomm.robotcore.hardware.Servo;
@@ -15,6 +16,7 @@ public class Hardware9330 {
     public static DcMotor intakeRight;
     public static DcMotor teleskop;
     public static Servo grabber;
+    public static BNO055IMU gyro;
 
     public Hardware9330(){
 
@@ -41,6 +43,8 @@ public class Hardware9330 {
         rightBack.setMode(DcMotor.RunMode.RUN_WITHOUT_ENCODER);
         //rightBack.setDirection(DcMotor.Direction.REVERSE);
         leftBack.setMode(DcMotor.RunMode.RUN_WITHOUT_ENCODER);
+
+        gyro = hwMap.get(BNO055IMU.class, "gyro");
 
 //        intakeLeft = hwMap.dcMotor.get("intakeLeft");
 //        intakeRight = hwMap.dcMotor.get("intakeRight");

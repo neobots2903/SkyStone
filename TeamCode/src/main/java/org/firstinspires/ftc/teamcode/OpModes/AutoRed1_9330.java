@@ -11,6 +11,8 @@ import org.firstinspires.ftc.robotcore.external.navigation.VuforiaLocalizer;
 import org.firstinspires.ftc.robotcore.external.navigation.VuforiaTrackable;
 import org.firstinspires.ftc.robotcore.external.navigation.VuforiaTrackableDefaultListener;
 import org.firstinspires.ftc.robotcore.external.navigation.VuforiaTrackables;
+import org.firstinspires.ftc.teamcode.Hardware9330;
+import org.firstinspires.ftc.teamcode.Subsystems.Drive9330;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -23,6 +25,21 @@ import static org.firstinspires.ftc.robotcore.external.navigation.VuforiaLocaliz
 
 @Autonomous(name = "AutoRed1_9330", group = "Opmode")
 public class AutoRed1_9330 extends LinearOpMode {
+
+    /**
+     *
+     * 1. Check which quadrant the robot is located in
+     *
+     * AUTONOMOUS RED 1 STEPS:
+     * 1. Turn 180 degrees
+     * 2. Move left
+     * 3. Move right and scan for Skyblocks
+     *
+     * **/
+
+    Hardware9330 robot9330 = new Hardware9330();
+    Drive9330 drive;
+
 
     private static final VuforiaLocalizer.CameraDirection CAMERA_CHOICE = BACK;
     private static final boolean PHONE_IS_PORTRAIT = false  ;
@@ -62,6 +79,7 @@ public class AutoRed1_9330 extends LinearOpMode {
     @Override
     public void runOpMode() throws InterruptedException {
         initVuforia();
+        initGeneral();
 
         targetsSkyStone.activate();
 
@@ -129,8 +147,15 @@ public class AutoRed1_9330 extends LinearOpMode {
 
         switch(startPos) {
             case "red1":
+                drive.gyroTurn(180, 1);
+                drive.driveRight(-1);
 
-                
+
+
+
+                break;
+            case "red2":
+
 
                 break;
         }
@@ -138,6 +163,11 @@ public class AutoRed1_9330 extends LinearOpMode {
         // Disable Tracking when we are done;
         targetsSkyStone.deactivate();
 
+
+    }
+
+    public void initGeneral() {
+        drive = new Drive9330(robot9330);
 
     }
 
