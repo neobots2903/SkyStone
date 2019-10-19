@@ -16,14 +16,14 @@ public class Drive9330 {
     }
 
 
-    public void turnCounterClockwise(float power) {
+    public void turnCounterClockwise(double power) {
         hwMap.rightFront.setPower(power);
         hwMap.leftFront.setPower(power);
         hwMap.rightBack.setPower(power);
         hwMap.leftBack.setPower(power);
     }
 
-    public void turnClockwise(float power) {
+    public void turnClockwise(double power) {
         hwMap.rightFront.setPower(-power);
         hwMap.leftFront.setPower(-power);
         hwMap.rightBack.setPower(-power);
@@ -31,9 +31,9 @@ public class Drive9330 {
     }
 
 
-    public void gyroTurn(float targetAngle, float power){
-        float minAngle = targetAngle - turnError + (float) gyro.getYaw();
-        float maxAngle = targetAngle + turnError + (float) gyro.getYaw();
+    public void gyroTurn(double targetAngle, double power){
+        double minAngle = targetAngle - turnError +  gyro.getYaw();
+        double maxAngle = targetAngle + turnError +  gyro.getYaw();
         while (gyro.getYaw() < minAngle || gyro.getYaw() > maxAngle){
             if(gyro.getYaw() < minAngle){
                 turnClockwise(power);
@@ -45,7 +45,7 @@ public class Drive9330 {
     }
 
 
-    public void driveForward(float power){
+    public void driveForward(double power){
         hwMap.rightFront.setPower(power);
         hwMap.leftFront.setPower(-power);
         hwMap.rightBack.setPower(power);
@@ -59,15 +59,29 @@ public class Drive9330 {
 //        hwMap.leftBack.setPower(power);
 //    }
 
-    public void driveRight(float power){
+    public void driveRight(double power){
         hwMap.rightFront.setPower(power);
         hwMap.leftFront.setPower(power);
         hwMap.rightBack.setPower(-power);
         hwMap.leftBack.setPower(-power);
     }
 
-    public void driveRightTime(float power, float time){
-        //driveRight();
+    public void driveRightTime(double power, double seconds){
+
+        long targetTime = System.currentTimeMillis() + (long)(seconds * 1000);
+        while (targetTime > System.currentTimeMillis()) {
+            driveRight(power);
+        }
+        stop();
+    }
+
+    public void driveForwardTime(double power, double seconds){
+
+        long targetTime = System.currentTimeMillis() + (long)(seconds * 1000);
+        while (targetTime > System.currentTimeMillis()) {
+            driveForward(power);
+        }
+        stop();
     }
 
 //    public void driveLeft(float power){
@@ -87,31 +101,39 @@ public class Drive9330 {
 //        hwMap.leftBack.setPower(-power);
 //    }
 
-    public void driveTopRight(float power){
+    public void driveTopRight(double power){
         hwMap.leftFront.setPower(power);
         hwMap.rightBack.setPower(-power);
     }
 
-    public void driveTopLeft(float power){
+    public void driveTopLeft(double power){
         hwMap.rightFront.setPower(power);
         hwMap.leftBack.setPower(-power);
     }
 
-    public void testRightFront(float power){
+    public void testRightFront(double power){
         hwMap.rightFront.setPower(power);
     }
 
-    public void testRightBack(float power){
+    public void testRightBack(double power){
         hwMap.rightBack.setPower(power);
     }
 
-    public void testLeftBack(float power){
+    public void testLeftBack(double power){
         hwMap.leftBack.setPower(power);
     }
 
-    public void testLeftFront(float power){
+    public void testLeftFront(double power){
         hwMap.leftFront.setPower(power);
     }
+
+    public void stop(){
+        hwMap.rightFront.setPower(0);
+        hwMap.leftFront.setPower(0);
+        hwMap.rightBack.setPower(0);
+        hwMap.leftBack.setPower(0);
+    }
+
 
 
 

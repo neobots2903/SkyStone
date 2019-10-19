@@ -28,12 +28,16 @@ public class AutoRed1_9330 extends LinearOpMode {
 
     /**
      *
-     * 1. Check which quadrant the robot is located in
+     * 1.back up until see image
+     * 2.Check which quadrant the robot is located in
      *
      * AUTONOMOUS RED 1 STEPS:
      * 1. Turn 180 degrees
-     * 2. Move left
-     * 3. Move right and scan for Skyblocks
+     * 2. scan for Skyblocks
+     * 3. when see skyblock strafe until y is -8 and our heading is 0
+     * 4. once we're there turn left and strafe right for a couple seconds
+     * 5. take in the skystone
+     *
      *
      * **/
 
@@ -81,13 +85,15 @@ public class AutoRed1_9330 extends LinearOpMode {
         initVuforia();
         initGeneral();
 
+
+
         targetsSkyStone.activate();
 
         String startPos = "";
 
         //find start position
         while (true) {
-
+            drive.driveForward(-0.7);
             for (VuforiaTrackable trackable : allTrackables) {
                 if (((VuforiaTrackableDefaultListener)trackable.getListener()).isVisible()) {
                     if(trackable.getName() == "Red Perimeter 2"){
@@ -108,6 +114,7 @@ public class AutoRed1_9330 extends LinearOpMode {
             }
 
             if (startPos != ""){
+                drive.stop();
                 break;
             }
 
@@ -147,10 +154,45 @@ public class AutoRed1_9330 extends LinearOpMode {
 
         switch(startPos) {
             case "red1":
+                double lastYPos = 0;
+                double lastXPos = 0;
+                double lastHeadingPos = 0;
+                double targetYPos = -8;
+                double targetXPos = 24;
+                double targetHeadingPos = 0;
+
                 drive.gyroTurn(180, 1);
-                drive.driveRight(-1);
+                while (true) {
+                    VuforiaTrackable targetTrackable = null;
 
 
+                    for (VuforiaTrackable trackable : allTrackables) {
+                        if (((VuforiaTrackableDefaultListener) trackable.getListener()).isVisible()) {
+                            if (trackable.getName() == "Stone Target") {
+                               if(targetTrackable == null)
+                                   targetTrackable = trackable;
+                               else if (targetTrackable.getLocation().getTranslation().get(1) <= trackable.getLocation().getTranslation().get(1))
+                                   targetTrackable = trackable;
+                            }
+
+                            telemetry.addData("Visible Skystone", trackable.getName());
+
+                            targetVisible = true;
+                            break;
+                        }
+                    }
+
+                    lastYPos = targetTrackable.getLocation().getTranslation().get(1);
+                    lastXPos = targetTrackable.getLocation().getTranslation().get(0);
+                    lastHeadingPos = Orientation.getOrientation(targetTrackable.getLocation(), EXTRINSIC, XYZ, DEGREES).thirdAngle;
+
+
+                    if (startPos != "") {
+                        drive.stop();
+                        break;
+                    }
+                }
+                drive.driveRightTime(-1, 2);
 
 
                 break;
