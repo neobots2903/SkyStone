@@ -27,7 +27,7 @@ public class Grabber9330 {
 
     public void toggle(){
 
-        hwMap.grabber.getPosition();
+
         if (hwMap.grabber.getPosition() < 0.5){
 
             retract();
@@ -41,7 +41,6 @@ public class Grabber9330 {
 
     }
 
-    public void init(){
-        hwMap.grabber.setPosition(0);
-    }
+    public void init(){hwMap.grabber.setPosition(0);}
+
 }

@@ -187,13 +187,16 @@ public class AutoRed1_9330 extends LinearOpMode {
                     lastHeadingPos = Orientation.getOrientation(targetTrackable.getLocation(), EXTRINSIC, XYZ, DEGREES).thirdAngle;
 
 
-                    if (startPos != "") {
+                    if (targetTrackable != null) {
                         drive.stop();
                         break;
                     }
                 }
-                drive.driveRightTime(-1, 2);
-
+                drive.gyroTurn(-lastHeadingPos, 1);
+//                while(true) {
+//                    drive.driveRight(-1);
+//
+//                }
 
                 break;
             case "red2":
