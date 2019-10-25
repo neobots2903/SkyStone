@@ -7,6 +7,7 @@ import org.firstinspires.ftc.teamcode.Hardware9330;
 import org.firstinspires.ftc.teamcode.Subsystems.Drive9330;
 import org.firstinspires.ftc.teamcode.Subsystems.Grabber9330;
 import org.firstinspires.ftc.teamcode.Subsystems.Intake9330;
+import org.firstinspires.ftc.teamcode.Subsystems.PlatformGrabber9330;
 import org.firstinspires.ftc.teamcode.Subsystems.TeleskopArm9330;
 
 @TeleOp(name = "TeleOp9330", group = "Opmode")
@@ -18,8 +19,10 @@ public class TeleOp9330 extends OpMode {
     Drive9330 drive;
     Intake9330 intake;
     TeleskopArm9330 teleskop;
+    PlatformGrabber9330 pGrabber;
 
     private boolean isAHeld = false;
+    private boolean isBHeld = false;
 
 
     @Override
@@ -27,6 +30,8 @@ public class TeleOp9330 extends OpMode {
         robot9330.init(hardwareMap);
         grabber = new Grabber9330(robot9330);
         grabber.init();
+        pGrabber = new PlatformGrabber9330(robot9330);
+        pGrabber.init();
         drive = new Drive9330(robot9330);
         intake = new Intake9330(robot9330);
         teleskop = new TeleskopArm9330(robot9330);
@@ -53,6 +58,18 @@ public class TeleOp9330 extends OpMode {
 //            grabber.retract();
 //        }
 
+
+        if(gamepad2.b && !isBHeld){
+
+            telemetry.addData("Program: ", "A is tapped");
+            grabber.toggle();
+            isBHeld = true;
+
+        } else if (!gamepad2.b){
+
+            isBHeld = false;
+            telemetry.addData("Program: ", "A isn't tapped");
+        }
 
 
         //drive.spinEverythingWow(gamepad2.left_stick_y);
