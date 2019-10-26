@@ -10,11 +10,24 @@ public class Intake9330 {
         this.hwMap = hwMap;
     }
 
-    public void takeIn(float power){
+    public void takeIn(double power){
         hwMap.intakeLeft.setPower(-power);
         hwMap.intakeRight.setPower(power);
 
     }
+    public void takeInTime(double power, double seconds){
+        long targetTime = System.currentTimeMillis() + (long)(seconds * 1000);
+        while (targetTime > System.currentTimeMillis()) {
+            takeIn(power);
+            stop();
+        }
 
+
+    }
+
+    public void stop() {
+        hwMap.intakeLeft.setPower(0);
+        hwMap.intakeRight.setPower(0);
+    }
 
 }

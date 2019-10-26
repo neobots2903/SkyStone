@@ -13,6 +13,7 @@ import org.firstinspires.ftc.robotcore.external.navigation.VuforiaTrackableDefau
 import org.firstinspires.ftc.robotcore.external.navigation.VuforiaTrackables;
 import org.firstinspires.ftc.teamcode.Hardware9330;
 import org.firstinspires.ftc.teamcode.Subsystems.Drive9330;
+import org.firstinspires.ftc.teamcode.Subsystems.Intake9330;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -43,6 +44,7 @@ public class AutoRed1_9330 extends LinearOpMode {
 
     Hardware9330 robot9330 = new Hardware9330();
     Drive9330 drive;
+    Intake9330 intake;
 
 
     private static final VuforiaLocalizer.CameraDirection CAMERA_CHOICE = BACK;
@@ -193,10 +195,23 @@ public class AutoRed1_9330 extends LinearOpMode {
                     }
                 }
                 drive.gyroTurn(-lastHeadingPos, 1);
-//                while(true) {
-//                    drive.driveRight(-1);
-//
-//                }
+
+                if(lastYPos > targetYPos){
+                    while(lastYPos > targetYPos) {
+                        drive.driveRight(1);
+                    }
+                } else if (lastYPos < targetYPos ){
+                    while(lastYPos < targetYPos) {
+                        drive.driveRight(-1);
+                    }
+                }
+
+                while (lastXPos > 3){
+                    drive.driveForward(1);
+                }
+
+                drive.gyroTurn(-90, 1);
+                intake.takeInTime(1, 3);
 
                 break;
             case "red2":
@@ -213,6 +228,7 @@ public class AutoRed1_9330 extends LinearOpMode {
 
     public void initGeneral() {
         drive = new Drive9330(robot9330);
+        intake = new Intake9330(robot9330);
 
     }
 
