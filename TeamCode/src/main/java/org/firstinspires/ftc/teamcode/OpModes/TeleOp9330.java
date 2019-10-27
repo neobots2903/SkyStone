@@ -4,6 +4,7 @@ import com.qualcomm.robotcore.eventloop.opmode.OpMode;
 import com.qualcomm.robotcore.eventloop.opmode.TeleOp;
 
 import org.firstinspires.ftc.teamcode.Hardware9330;
+import org.firstinspires.ftc.teamcode.Subsystems.Arm9330;
 import org.firstinspires.ftc.teamcode.Subsystems.Drive9330;
 import org.firstinspires.ftc.teamcode.Subsystems.Grabber9330;
 import org.firstinspires.ftc.teamcode.Subsystems.Intake9330;
@@ -17,6 +18,7 @@ public class TeleOp9330 extends OpMode {
     Hardware9330 robot9330 = new Hardware9330();
     Grabber9330 grabber;
     Drive9330 drive;
+    Arm9330 arm;
     Intake9330 intake;
     TeleskopArm9330 teleskop;
     PlatformGrabber9330 pGrabber;
@@ -31,8 +33,9 @@ public class TeleOp9330 extends OpMode {
         grabber = new Grabber9330(robot9330);
         grabber.init();
         pGrabber = new PlatformGrabber9330(robot9330);
-        pGrabber.init();
+//        pGrabber.init();
         drive = new Drive9330(robot9330);
+        arm = new Arm9330(robot9330);
         intake = new Intake9330(robot9330);
         teleskop = new TeleskopArm9330(robot9330);
     }
@@ -61,14 +64,20 @@ public class TeleOp9330 extends OpMode {
 
         if(gamepad2.b && !isBHeld){
 
-            telemetry.addData("Program: ", "A is tapped");
-            grabber.toggle();
+
             isBHeld = true;
 
         } else if (!gamepad2.b){
 
             isBHeld = false;
-            telemetry.addData("Program: ", "A isn't tapped");
+
+        }
+
+
+        if (gamepad2.left_stick_y > 0 || gamepad2.left_stick_y < 0) {
+            arm.move(gamepad2.left_stick_y);
+        } else if(gamepad2.left_stick_y == 0){
+            arm.stop();
         }
 
 

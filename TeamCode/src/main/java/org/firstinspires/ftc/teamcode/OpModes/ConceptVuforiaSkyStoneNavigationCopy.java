@@ -82,7 +82,7 @@ import static org.firstinspires.ftc.robotcore.external.navigation.VuforiaLocaliz
  */
 
 
-@TeleOp(name="SKYSTONE Vuforia Nav", group ="Concept")
+@TeleOp(name="SKYSTONE Vuforia Nav Copy", group ="Concept")
 
 public class ConceptVuforiaSkyStoneNavigationCopy extends LinearOpMode {
 

@@ -15,6 +15,8 @@ public class Hardware9330 {
     public static DcMotor intakeLeft;
     public static DcMotor intakeRight;
     public static DcMotor teleskop;
+    public static DcMotor arm;
+
     public static Servo grabber;
     public static BNO055IMU gyro;
     public static Servo pGrabber1;
@@ -46,9 +48,13 @@ public class Hardware9330 {
         //rightBack.setDirection(DcMotor.Direction.REVERSE);
         leftBack.setMode(DcMotor.RunMode.RUN_WITHOUT_ENCODER);
 
+        arm = hwMap.dcMotor.get("arm");
+        arm.setMode(DcMotor.RunMode.RUN_WITHOUT_ENCODER);
+
         gyro = hwMap.get(BNO055IMU.class, "gyro");
 
-        pGrabber1 = hwMap.servo.get("pGrabber");
+        pGrabber1 = hwMap.servo.get("pGrabber1");
+        pGrabber2 = hwMap.servo.get("pGrabber2");
 
 //        intakeLeft = hwMap.dcMotor.get("intakeLeft");
 //        intakeRight = hwMap.dcMotor.get("intakeRight");
