@@ -43,6 +43,8 @@ public class TeleOp9330 extends OpMode {
     @Override
     public void loop() {
 
+        telemetry.addData("Encoder Value: " , robot9330.arm.getCurrentPosition());
+
         if(gamepad2.a && !isAHeld){
 
             telemetry.addData("Program: ", "A is tapped");
@@ -75,10 +77,16 @@ public class TeleOp9330 extends OpMode {
 
 
         if (gamepad2.left_stick_y > 0 || gamepad2.left_stick_y < 0) {
-            arm.move(gamepad2.left_stick_y);
+            //arm.move(gamepad2.left_stick_y,300);
         } else if(gamepad2.left_stick_y == 0){
             arm.stop();
         }
+
+        arm.setPos(gamepad2.dpad_up  ? 300 : 0);
+
+        arm.moveToPos(1);
+
+
 
 
         //drive.spinEverythingWow(gamepad2.left_stick_y);

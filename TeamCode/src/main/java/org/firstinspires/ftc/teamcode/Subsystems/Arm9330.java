@@ -6,6 +6,12 @@ import org.firstinspires.ftc.teamcode.Hardware9330;
 
 public class Arm9330 {
     Hardware9330 hwMap;
+    double encoderDriveSpeed = 0.4;
+    double Diameter = 6;
+    double Circumference = 3.1415 * Diameter;
+    int ppr = 560;
+    int oneInchOfMovement = (int)Math.round(ppr / Circumference);
+
 
 
     public Arm9330(Hardware9330 hwMap){
@@ -13,9 +19,23 @@ public class Arm9330 {
         hwMap.arm.setZeroPowerBehavior(DcMotor.ZeroPowerBehavior.BRAKE);
     }
 
-    public void move (double power){
-        hwMap.arm.setPower(-power/2);
+    public void moveToPos (double power){
+
+        //while(hwMap.arm.getCurrentPosition() < position-5 || hwMap.arm.getCurrentPosition() > position+5) {
+            hwMap.arm.setMode(DcMotor.RunMode.RUN_TO_POSITION);
+            hwMap.arm.setPower(power);
+            hwMap.arm.setMode(DcMotor.RunMode.RUN_TO_POSITION);
+        //}
     }
+
+    public void setPos (int position){
+        hwMap.arm.setTargetPosition(position);
+    }
+
+//    public int getEncoderValue () {
+//        int value = hwMap.arm.getCurrentPosition();
+//        return value;
+//    }
 
     public void stop (){
         hwMap.arm.setPower(0);

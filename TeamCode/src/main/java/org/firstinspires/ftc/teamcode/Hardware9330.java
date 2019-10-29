@@ -49,7 +49,7 @@ public class Hardware9330 {
         leftBack.setMode(DcMotor.RunMode.RUN_WITHOUT_ENCODER);
 
         arm = hwMap.dcMotor.get("arm");
-        arm.setMode(DcMotor.RunMode.RUN_WITHOUT_ENCODER);
+        arm.setMode(DcMotor.RunMode.STOP_AND_RESET_ENCODER);
 
         gyro = hwMap.get(BNO055IMU.class, "gyro");
 
