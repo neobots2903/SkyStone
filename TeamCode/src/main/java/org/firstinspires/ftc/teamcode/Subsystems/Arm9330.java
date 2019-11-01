@@ -4,15 +4,18 @@ import com.qualcomm.robotcore.hardware.DcMotor;
 
 import org.firstinspires.ftc.teamcode.Hardware9330;
 
-public class Arm9330 {
+public class Arm9330 implements Runnable {
     Hardware9330 hwMap;
     double encoderDriveSpeed = 0.4;
     double Diameter = 6;
     double Circumference = 3.1415 * Diameter;
     int ppr = 560;
     int oneInchOfMovement = (int)Math.round(ppr / Circumference);
+    private Thread thread;
 
-
+    public void init (){
+        thread.start();
+    }
 
     public Arm9330(Hardware9330 hwMap){
         this.hwMap = hwMap;
@@ -39,5 +42,10 @@ public class Arm9330 {
 
     public void stop (){
         hwMap.arm.setPower(0);
+    }
+
+    @Override
+    public void run() {
+       moveToPos(1);
     }
 }

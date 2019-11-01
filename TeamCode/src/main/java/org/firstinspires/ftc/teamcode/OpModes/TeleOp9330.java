@@ -25,6 +25,7 @@ public class TeleOp9330 extends OpMode {
 
     private boolean isAHeld = false;
     private boolean isBHeld = false;
+    private int armPosSwitch = 1;
 
 
     @Override
@@ -82,8 +83,20 @@ public class TeleOp9330 extends OpMode {
             arm.stop();
         }
 
-        arm.setPos(gamepad2.dpad_up  ? 300 : 0);
 
+        if (gamepad2.dpad_down = true && armPosSwitch > 1){
+            armPosSwitch--;
+        }
+        if (gamepad2.dpad_up = true && armPosSwitch < 2){
+            armPosSwitch++;
+        }
+
+        if (armPosSwitch == 1) arm.setPos(100);
+        if (armPosSwitch == 2) arm.setPos(300);
+
+        telemetry.addData("Arm Switch Position: " , armPosSwitch);
+//        arm.setPos(gamepad2.dpad_up  ? 300 : 0);
+//
         arm.moveToPos(1);
 
 

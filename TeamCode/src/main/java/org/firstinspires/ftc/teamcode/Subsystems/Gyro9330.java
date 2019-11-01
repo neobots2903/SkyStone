@@ -35,6 +35,7 @@ public class Gyro9330 implements Runnable {
 
         thread = new Thread(this);
         thread.start();
+
     }
 
     public void calculateYaw() {
