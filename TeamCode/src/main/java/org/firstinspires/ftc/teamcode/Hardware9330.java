@@ -49,15 +49,15 @@ public class Hardware9330 {
         leftBack.setMode(DcMotor.RunMode.RUN_WITHOUT_ENCODER);
 
         arm = hwMap.dcMotor.get("arm");
-        arm.setMode(DcMotor.RunMode.STOP_AND_RESET_ENCODER);
+        arm.setMode(DcMotor.RunMode.RUN_WITHOUT_ENCODER);
 
         gyro = hwMap.get(BNO055IMU.class, "gyro");
 
         pGrabber1 = hwMap.servo.get("pGrabber1");
         pGrabber2 = hwMap.servo.get("pGrabber2");
 
-//        intakeLeft = hwMap.dcMotor.get("intakeLeft");
-//        intakeRight = hwMap.dcMotor.get("intakeRight");
+        intakeLeft = hwMap.dcMotor.get("intakeLeft");
+        intakeRight = hwMap.dcMotor.get("intakeRight");
 //
 //        teleskop = hwMap.dcMotor.get("teleskop");
 
