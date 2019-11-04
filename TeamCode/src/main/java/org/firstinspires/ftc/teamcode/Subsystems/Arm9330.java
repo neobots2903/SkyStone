@@ -4,7 +4,7 @@ import com.qualcomm.robotcore.hardware.DcMotor;
 
 import org.firstinspires.ftc.teamcode.Hardware9330;
 
-public class Arm9330 implements Runnable {
+public class Arm9330 {
     Hardware9330 hwMap;
     double encoderDriveSpeed = 0.4;
     double Diameter = 6;
@@ -20,32 +20,38 @@ public class Arm9330 implements Runnable {
     public Arm9330(Hardware9330 hwMap){
         this.hwMap = hwMap;
         hwMap.arm.setZeroPowerBehavior(DcMotor.ZeroPowerBehavior.BRAKE);
+        hwMap.arm.setTargetPosition(hwMap.arm.getCurrentPosition());
     }
 
-    public void moveToPos (double power){
+    public void move (double power){
+        hwMap.arm.setPower(-power/4);
+    }
 
-        //while(hwMap.arm.getCurrentPosition() < position-5 || hwMap.arm.getCurrentPosition() > position+5) {
+    public void moveToPos (double power, int position){
+
+
             hwMap.arm.setMode(DcMotor.RunMode.RUN_TO_POSITION);
             hwMap.arm.setPower(power);
-            hwMap.arm.setMode(DcMotor.RunMode.RUN_TO_POSITION);
-        //}
+            hwMap.arm.setTargetPosition(position);
+
+
     }
 
     public void setPos (int position){
         hwMap.arm.setTargetPosition(position);
     }
 
-//    public int getEncoderValue () {
-//        int value = hwMap.arm.getCurrentPosition();
-//        return value;
-//    }
+    public int getEncoderTarget () {
+        return hwMap.arm.getTargetPosition();
+
+    }
 
     public void stop (){
         hwMap.arm.setPower(0);
     }
 
-    @Override
-    public void run() {
-       moveToPos(1);
-    }
+//    @Override
+//    public void run() {
+//       moveToPos(1);
+//    }
 }

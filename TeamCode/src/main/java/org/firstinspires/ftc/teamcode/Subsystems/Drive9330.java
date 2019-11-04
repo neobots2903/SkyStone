@@ -17,17 +17,17 @@ public class Drive9330 {
 
 
     public void turnCounterClockwise(double power) {
-        hwMap.rightFront.setPower(power);
-        hwMap.leftFront.setPower(power);
-        hwMap.rightBack.setPower(power);
-        hwMap.leftBack.setPower(power);
-    }
-
-    public void turnClockwise(double power) {
         hwMap.rightFront.setPower(-power);
         hwMap.leftFront.setPower(-power);
         hwMap.rightBack.setPower(-power);
         hwMap.leftBack.setPower(-power);
+    }
+
+    public void turnClockwise(double power) {
+        hwMap.rightFront.setPower(power);
+        hwMap.leftFront.setPower(power);
+        hwMap.rightBack.setPower(power);
+        hwMap.leftBack.setPower(power);
     }
 
 
@@ -46,10 +46,10 @@ public class Drive9330 {
 
 
     public void driveForward(double power){
-        hwMap.rightFront.setPower(power);
-        hwMap.leftFront.setPower(-power);
-        hwMap.rightBack.setPower(power);
-        hwMap.leftBack.setPower(-power);
+        hwMap.rightFront.setPower(-power);
+        hwMap.leftFront.setPower(power);
+        hwMap.rightBack.setPower(-power);
+        hwMap.leftBack.setPower(power);
     }
 
 //    public void driveBackward(float power){
@@ -60,10 +60,10 @@ public class Drive9330 {
 //    }
 
     public void driveRight(double power){
-        hwMap.rightFront.setPower(power);
-        hwMap.leftFront.setPower(power);
-        hwMap.rightBack.setPower(-power);
-        hwMap.leftBack.setPower(-power);
+        hwMap.rightFront.setPower(-power);
+        hwMap.leftFront.setPower(-power);
+        hwMap.rightBack.setPower(power);
+        hwMap.leftBack.setPower(power);
     }
 
     public void driveRightTime(double power, double seconds){
@@ -102,13 +102,13 @@ public class Drive9330 {
 //    }
 
     public void driveTopRight(double power){
-        hwMap.leftFront.setPower(power);
-        hwMap.rightBack.setPower(-power);
+        hwMap.leftFront.setPower(-power);
+        hwMap.rightBack.setPower(power);
     }
 
     public void driveTopLeft(double power){
-        hwMap.rightFront.setPower(power);
-        hwMap.leftBack.setPower(-power);
+        hwMap.rightFront.setPower(-power);
+        hwMap.leftBack.setPower(power);
     }
 
     public void testRightFront(double power){

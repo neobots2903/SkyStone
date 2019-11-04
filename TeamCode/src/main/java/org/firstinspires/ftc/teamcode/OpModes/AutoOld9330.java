@@ -24,8 +24,8 @@ import static org.firstinspires.ftc.robotcore.external.navigation.AxesOrder.YZX;
 import static org.firstinspires.ftc.robotcore.external.navigation.AxesReference.EXTRINSIC;
 import static org.firstinspires.ftc.robotcore.external.navigation.VuforiaLocalizer.CameraDirection.BACK;
 
-@Autonomous(name = "AutoRed1_9330", group = "Opmode")
-public class AutoRed1_9330 extends LinearOpMode {
+@Autonomous(name = "AutoRed1_Old", group = "Opmode")
+public class AutoOld9330 extends LinearOpMode {
 
     /**
      *
