@@ -24,7 +24,7 @@ import static org.firstinspires.ftc.robotcore.external.navigation.AxesOrder.YZX;
 import static org.firstinspires.ftc.robotcore.external.navigation.AxesReference.EXTRINSIC;
 import static org.firstinspires.ftc.robotcore.external.navigation.VuforiaLocalizer.CameraDirection.BACK;
 
-@Autonomous(name = "AutoRed1_Old", group = "Opmode")
+@Autonomous(name = "AutoOld", group = "Opmode")
 public class AutoOld9330 extends LinearOpMode {
 
     /**
@@ -79,14 +79,14 @@ public class AutoOld9330 extends LinearOpMode {
     private float phoneYRotate    = 0;
     private float phoneZRotate    = 0;
 
-    VuforiaTrackables targetsSkyStone = this.vuforia.loadTrackablesFromAsset("Skystone");
+    VuforiaTrackables targetsSkyStone;
     List<VuforiaTrackable> allTrackables = new ArrayList<VuforiaTrackable>();
 
     @Override
     public void runOpMode() throws InterruptedException {
         initVuforia();
         initGeneral();
-
+        waitForStart();
 
 
         targetsSkyStone.activate();
@@ -95,6 +95,7 @@ public class AutoOld9330 extends LinearOpMode {
 
         //find start position
         while (true) {
+            telemetry.addData("State", "Driving backwards");
             drive.driveForward(-0.7);
             for (VuforiaTrackable trackable : allTrackables) {
                 if (((VuforiaTrackableDefaultListener)trackable.getListener()).isVisible()) {
@@ -116,6 +117,8 @@ public class AutoOld9330 extends LinearOpMode {
             }
 
             if (startPos != ""){
+                telemetry.addData("State", "Breaking out of while loop");
+                telemetry.addData("Startpos", startPos);
                 drive.stop();
                 break;
             }
@@ -156,6 +159,9 @@ public class AutoOld9330 extends LinearOpMode {
 
         switch(startPos) {
             case "red1":
+
+                telemetry.addData("Quadrant", "red1");
+
                 double lastYPos = 0;
                 double lastXPos = 0;
                 double lastHeadingPos = 0;
@@ -227,6 +233,8 @@ public class AutoOld9330 extends LinearOpMode {
     }
 
     public void initGeneral() {
+
+        robot9330.init(hardwareMap);
         drive = new Drive9330(robot9330);
         intake = new Intake9330(robot9330);
 
@@ -242,6 +250,9 @@ public class AutoOld9330 extends LinearOpMode {
 
         //  Instantiate the Vuforia engine
         vuforia = ClassFactory.getInstance().createVuforia(parameters);
+
+
+        targetsSkyStone = this.vuforia.loadTrackablesFromAsset("Skystone");
 
         //trackable objects
 
