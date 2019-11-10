@@ -114,9 +114,9 @@ public class TeleOp9330 extends OpMode {
         float xPower = gamepad1.left_stick_x;
         float averagePower = (Math.abs(gamepad1.left_stick_y) + Math.abs(gamepad1.left_stick_x))/2;
 
-        if (yPower != 0 && xPower == 0) {
+        if (yPower != 0 && Math.abs(xPower) < 0.4) {
             drive.driveForward(-yPower);
-        } else if (xPower != 0 && yPower == 0){
+        } else if (xPower != 0 && Math.abs(yPower) < 0.4){
             drive.driveRight(xPower);
         } else if (yPower > 0.5 && xPower > 0.5) {
             telemetry.addData("Program: ", "top right");

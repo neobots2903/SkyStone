@@ -33,8 +33,8 @@ public class Gyro9330 implements Runnable {
 
         resetGyro();
 
-        thread = new Thread(this);
-        thread.start();
+        //thread = new Thread(this);
+        //thread.start();
 
     }
 

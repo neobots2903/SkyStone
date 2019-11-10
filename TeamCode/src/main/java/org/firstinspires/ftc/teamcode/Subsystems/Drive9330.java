@@ -6,13 +6,14 @@ public class Drive9330 {
 
     Hardware9330 hwMap;
     Gyro9330 gyro;
-    float turnError = 1;
+    double turnError = 0.25;
 
 
     public Drive9330(Hardware9330 hwMap) {
         this.hwMap = hwMap;
         gyro = new Gyro9330(hwMap);
         gyro.init();
+
     }
 
 
@@ -31,17 +32,22 @@ public class Drive9330 {
     }
 
 
-    public void gyroTurn(double targetAngle, double power){
+    public void gyroTurn(double targetAngle){
+
         double minAngle = targetAngle - turnError +  gyro.getYaw();
         double maxAngle = targetAngle + turnError +  gyro.getYaw();
         while (gyro.getYaw() < minAngle || gyro.getYaw() > maxAngle){
-            if(gyro.getYaw() < minAngle){
-                turnClockwise(power);
-            } else if (gyro.getYaw() > maxAngle){
-                turnCounterClockwise(power);
+            double calcPower = Math.abs(maxAngle - gyro.getYaw()) /Math.abs(targetAngle);
+            if (calcPower < 0.25) calcPower = 0.15;
+            else calcPower = 1;
+            if (gyro.getYaw() < minAngle) {
+                turnClockwise(-calcPower);
+            } else if (gyro.getYaw() > maxAngle) {
+                turnCounterClockwise(-calcPower);
             }
-        }
 
+        }
+        stop();
     }
 
 
@@ -132,6 +138,10 @@ public class Drive9330 {
         hwMap.leftFront.setPower(0);
         hwMap.rightBack.setPower(0);
         hwMap.leftBack.setPower(0);
+    }
+
+    public double getYaw(){
+        return gyro.getYaw();
     }
 
 

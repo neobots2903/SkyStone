@@ -11,6 +11,7 @@ import org.firstinspires.ftc.robotcore.external.navigation.VuforiaLocalizer;
 import org.firstinspires.ftc.robotcore.external.navigation.VuforiaTrackable;
 import org.firstinspires.ftc.robotcore.external.navigation.VuforiaTrackableDefaultListener;
 import org.firstinspires.ftc.robotcore.external.navigation.VuforiaTrackables;
+import org.firstinspires.ftc.robotcore.internal.opmode.TelemetryImpl;
 import org.firstinspires.ftc.teamcode.Hardware9330;
 import org.firstinspires.ftc.teamcode.Subsystems.Drive9330;
 import org.firstinspires.ftc.teamcode.Subsystems.Intake9330;
@@ -25,7 +26,7 @@ import static org.firstinspires.ftc.robotcore.external.navigation.AxesReference.
 import static org.firstinspires.ftc.robotcore.external.navigation.VuforiaLocalizer.CameraDirection.BACK;
 
 @Autonomous(name = "AutoOld", group = "Opmode")
-public class AutoOld9330 extends LinearOpMode {
+public class AutoOld9330 extends LinearOpMode implements Runnable {
 
     /**
      *
@@ -45,7 +46,7 @@ public class AutoOld9330 extends LinearOpMode {
     Hardware9330 robot9330 = new Hardware9330();
     Drive9330 drive;
     Intake9330 intake;
-
+    private Thread thread;
 
     private static final VuforiaLocalizer.CameraDirection CAMERA_CHOICE = BACK;
     private static final boolean PHONE_IS_PORTRAIT = false  ;
@@ -84,19 +85,27 @@ public class AutoOld9330 extends LinearOpMode {
 
     @Override
     public void runOpMode() throws InterruptedException {
+        telemetry.addData("State", "init");
+        telemetry.update();
         initVuforia();
         initGeneral();
+        thread = new Thread(this);
+        thread.start();
+        telemetry.addData("State", "Reday to Run");
+        telemetry.update();
         waitForStart();
 
 
         targetsSkyStone.activate();
-
+        telemetry.addData("State", "skystone target activated");
+        telemetry.update();
         String startPos = "";
 
         //find start position
         while (true) {
             telemetry.addData("State", "Driving backwards");
-            drive.driveForward(-0.7);
+            telemetry.update();
+            drive.driveForwardTime(0.7, 0.35);
             for (VuforiaTrackable trackable : allTrackables) {
                 if (((VuforiaTrackableDefaultListener)trackable.getListener()).isVisible()) {
                     if(trackable.getName() == "Red Perimeter 2"){
@@ -109,7 +118,9 @@ public class AutoOld9330 extends LinearOpMode {
                         startPos = "blue2";
                     }
 
+
                     telemetry.addData("Visible Target", trackable.getName());
+                    telemetry.update();
 
                     targetVisible = true;
                     break;
@@ -119,6 +130,7 @@ public class AutoOld9330 extends LinearOpMode {
             if (startPos != ""){
                 telemetry.addData("State", "Breaking out of while loop");
                 telemetry.addData("Startpos", startPos);
+                telemetry.update();
                 drive.stop();
                 break;
             }
@@ -161,6 +173,7 @@ public class AutoOld9330 extends LinearOpMode {
             case "red1":
 
                 telemetry.addData("Quadrant", "red1");
+                telemetry.update();
 
                 double lastYPos = 0;
                 double lastXPos = 0;
@@ -169,7 +182,9 @@ public class AutoOld9330 extends LinearOpMode {
                 double targetXPos = 24;
                 double targetHeadingPos = 0;
 
-                drive.gyroTurn(180, 1);
+                drive.gyroTurn(180);
+                telemetry.addData("get Yaw", drive.getYaw());
+                telemetry.update();
                 while (true) {
                     VuforiaTrackable targetTrackable = null;
 
@@ -184,39 +199,49 @@ public class AutoOld9330 extends LinearOpMode {
                             }
 
                             telemetry.addData("Visible Skystone", trackable.getName());
+                            telemetry.update();
 
                             targetVisible = true;
                             break;
                         }
                     }
+                    if(targetTrackable != null) {
+                        lastYPos = targetTrackable.getLocation().getTranslation().get(1);
+                        lastXPos = targetTrackable.getLocation().getTranslation().get(0);
+                        lastHeadingPos = Orientation.getOrientation(targetTrackable.getLocation(), EXTRINSIC, XYZ, DEGREES).thirdAngle;
+                        drive.gyroTurn(-lastHeadingPos);
 
-                    lastYPos = targetTrackable.getLocation().getTranslation().get(1);
-                    lastXPos = targetTrackable.getLocation().getTranslation().get(0);
-                    lastHeadingPos = Orientation.getOrientation(targetTrackable.getLocation(), EXTRINSIC, XYZ, DEGREES).thirdAngle;
+                        if(lastYPos > targetYPos){
 
+                            drive.driveRight(1);
 
-                    if (targetTrackable != null) {
+                        } else if (lastYPos < targetYPos ){
+
+                            drive.driveRight(-1);
+
+                        }
+
+                        if (lastXPos > targetXPos){
+                            drive.driveForward(1);
+                        }
+                        else if (lastXPos < targetXPos)
+                            drive.driveForward(-1);
+
+                        if ((Math.round(lastXPos) == Math.round(targetXPos))&&(Math.round(lastYPos) == Math.round(targetYPos))&&(Math.round(lastHeadingPos) == Math.round(targetHeadingPos)) ){
+                            drive.stop();
+                            break;
+                        }
+
+                    } else{
                         drive.stop();
-                        break;
-                    }
-                }
-                drive.gyroTurn(-lastHeadingPos, 1);
 
-                if(lastYPos > targetYPos){
-                    while(lastYPos > targetYPos) {
-                        drive.driveRight(1);
                     }
-                } else if (lastYPos < targetYPos ){
-                    while(lastYPos < targetYPos) {
-                        drive.driveRight(-1);
-                    }
+
+
                 }
 
-                while (lastXPos > 3){
-                    drive.driveForward(1);
-                }
 
-                drive.gyroTurn(-90, 1);
+                drive.gyroTurn(-90);
                 intake.takeInTime(1, 3);
 
                 break;
@@ -364,6 +389,14 @@ public class AutoOld9330 extends LinearOpMode {
         //let everything know where the camera is
         for (VuforiaTrackable trackable : allTrackables) {
             ((VuforiaTrackableDefaultListener) trackable.getListener()).setPhoneInformation(robotFromCamera, parameters.cameraDirection);
+        }
+    }
+
+    @Override
+    public void run(){
+        while(true){
+            telemetry.addData("getYaw",drive.getYaw());
+            telemetry.update();
         }
     }
 
