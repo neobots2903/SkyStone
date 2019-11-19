@@ -38,7 +38,7 @@ public class PlatformGrabber9330 {
 
             open();
 
-        }
 
+    }
     }
 }

@@ -13,8 +13,10 @@ import org.firstinspires.ftc.robotcore.external.navigation.VuforiaTrackableDefau
 import org.firstinspires.ftc.robotcore.external.navigation.VuforiaTrackables;
 import org.firstinspires.ftc.robotcore.internal.opmode.TelemetryImpl;
 import org.firstinspires.ftc.teamcode.Hardware9330;
+import org.firstinspires.ftc.teamcode.Subsystems.Arm9330;
 import org.firstinspires.ftc.teamcode.Subsystems.Drive9330;
 import org.firstinspires.ftc.teamcode.Subsystems.Intake9330;
+import org.firstinspires.ftc.teamcode.Subsystems.PlatformGrabber9330;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -46,6 +48,8 @@ public class AutoOld9330 extends LinearOpMode implements Runnable {
     Hardware9330 robot9330 = new Hardware9330();
     Drive9330 drive;
     Intake9330 intake;
+    PlatformGrabber9330 pGrabber;
+    Arm9330 arm;
     private Thread thread;
 
     private static final VuforiaLocalizer.CameraDirection CAMERA_CHOICE = BACK;
@@ -91,11 +95,11 @@ public class AutoOld9330 extends LinearOpMode implements Runnable {
         initGeneral();
         thread = new Thread(this);
         thread.start();
-        telemetry.addData("State", "Reday to Run");
+        telemetry.addData("State", "Ready to Run");
         telemetry.update();
         waitForStart();
 
-
+        arm.moveToPos(1, 400);
         targetsSkyStone.activate();
         telemetry.addData("State", "skystone target activated");
         telemetry.update();
@@ -170,7 +174,7 @@ public class AutoOld9330 extends LinearOpMode implements Runnable {
         }
 
         switch(startPos) {
-            case "red1":
+                case "red1":
 
                 telemetry.addData("Quadrant", "red1");
                 telemetry.update();
@@ -183,9 +187,10 @@ public class AutoOld9330 extends LinearOpMode implements Runnable {
                 double targetHeadingPos = 0;
 
                 drive.gyroTurn(180);
+                drive.driveForwardTime(-1 , 0.5);
                 telemetry.addData("get Yaw", drive.getYaw());
                 telemetry.update();
-                while (true) {
+                while (!isStopRequested()) {
                     VuforiaTrackable targetTrackable = null;
 
 
@@ -247,7 +252,15 @@ public class AutoOld9330 extends LinearOpMode implements Runnable {
                 break;
             case "red2":
 
-
+                drive.gyroTurn(-90);
+                drive.driveForwardTime(-1, 0.9);
+                drive.driveRightTime(-1, 0.55);
+                pGrabber.close();
+                thread.sleep(1000);
+                drive.driveRightTime(1, 1.7);
+                pGrabber.open();
+                thread.sleep(1000);
+                drive.driveForwardTime(1,2.35);
                 break;
         }
 
@@ -262,6 +275,9 @@ public class AutoOld9330 extends LinearOpMode implements Runnable {
         robot9330.init(hardwareMap);
         drive = new Drive9330(robot9330);
         intake = new Intake9330(robot9330);
+        pGrabber = new PlatformGrabber9330(robot9330);
+        pGrabber.init();
+        arm = new Arm9330(robot9330);
 
     }
 

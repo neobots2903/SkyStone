@@ -53,7 +53,7 @@ public class AutoRightOut9330 extends LinearOpMode {
     public void runOpMode() throws InterruptedException {
 
         initGeneral();
-        waitForStart();
+
         drive.driveForwardTime(-1, 0.5);
         drive.driveRightTime(1,0.75);
 
