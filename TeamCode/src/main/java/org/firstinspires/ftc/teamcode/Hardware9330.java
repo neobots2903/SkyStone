@@ -1,6 +1,7 @@
 package org.firstinspires.ftc.teamcode;
 
 import com.qualcomm.hardware.bosch.BNO055IMU;
+import com.qualcomm.robotcore.hardware.ColorSensor;
 import com.qualcomm.robotcore.hardware.DcMotor;
 import com.qualcomm.robotcore.hardware.HardwareMap;
 import com.qualcomm.robotcore.hardware.Servo;
@@ -18,9 +19,12 @@ public class Hardware9330 {
     public static DcMotor arm;
 
     public static Servo grabber;
-    public static BNO055IMU gyro;
     public static Servo pGrabber1;
     public static Servo pGrabber2;
+
+    public static BNO055IMU gyro;
+    public static ColorSensor colorSensor;
+
 
     public Hardware9330(){
 
@@ -52,6 +56,7 @@ public class Hardware9330 {
         arm.setMode(DcMotor.RunMode.RUN_USING_ENCODER);
 
         gyro = hwMap.get(BNO055IMU.class, "gyro");
+        colorSensor = hwMap.get(ColorSensor.class, "sensor_color");
 
         pGrabber1 = hwMap.servo.get("pGrabber1");
         pGrabber2 = hwMap.servo.get("pGrabber2");

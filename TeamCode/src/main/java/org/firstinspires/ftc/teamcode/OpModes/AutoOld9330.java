@@ -14,6 +14,7 @@ import org.firstinspires.ftc.robotcore.external.navigation.VuforiaTrackables;
 import org.firstinspires.ftc.robotcore.internal.opmode.TelemetryImpl;
 import org.firstinspires.ftc.teamcode.Hardware9330;
 import org.firstinspires.ftc.teamcode.Subsystems.Arm9330;
+import org.firstinspires.ftc.teamcode.Subsystems.ColorSensor9330;
 import org.firstinspires.ftc.teamcode.Subsystems.Drive9330;
 import org.firstinspires.ftc.teamcode.Subsystems.Intake9330;
 import org.firstinspires.ftc.teamcode.Subsystems.PlatformGrabber9330;
@@ -50,6 +51,7 @@ public class AutoOld9330 extends LinearOpMode implements Runnable {
     Intake9330 intake;
     PlatformGrabber9330 pGrabber;
     Arm9330 arm;
+    ColorSensor9330 color;
     private Thread thread;
 
     private static final VuforiaLocalizer.CameraDirection CAMERA_CHOICE = BACK;
@@ -87,6 +89,8 @@ public class AutoOld9330 extends LinearOpMode implements Runnable {
     VuforiaTrackables targetsSkyStone;
     List<VuforiaTrackable> allTrackables = new ArrayList<VuforiaTrackable>();
 
+    int armStartPos = 0;
+
     @Override
     public void runOpMode() throws InterruptedException {
         telemetry.addData("State", "init");
@@ -99,7 +103,8 @@ public class AutoOld9330 extends LinearOpMode implements Runnable {
         telemetry.update();
         waitForStart();
 
-        arm.moveToPos(1, 400);
+        arm.moveToPos(1, 400+armStartPos);
+        Thread.sleep(1000);
         targetsSkyStone.activate();
         telemetry.addData("State", "skystone target activated");
         telemetry.update();
@@ -171,83 +176,101 @@ public class AutoOld9330 extends LinearOpMode implements Runnable {
 //                telemetry.addData("Visible Target", "none");
 //            }
 //            telemetry.update();
-        }
-
-        switch(startPos) {
-                case "red1":
-
-                telemetry.addData("Quadrant", "red1");
-                telemetry.update();
-
-                double lastYPos = 0;
-                double lastXPos = 0;
-                double lastHeadingPos = 0;
-                double targetYPos = -8;
-                double targetXPos = 24;
-                double targetHeadingPos = 0;
-
-                drive.gyroTurn(180);
-                drive.driveForwardTime(-1 , 0.5);
-                telemetry.addData("get Yaw", drive.getYaw());
-                telemetry.update();
-                while (!isStopRequested()) {
-                    VuforiaTrackable targetTrackable = null;
-
-
-                    for (VuforiaTrackable trackable : allTrackables) {
-                        if (((VuforiaTrackableDefaultListener) trackable.getListener()).isVisible()) {
-                            if (trackable.getName() == "Stone Target") {
-                               if(targetTrackable == null)
-                                   targetTrackable = trackable;
-                               else if (targetTrackable.getLocation().getTranslation().get(1) <= trackable.getLocation().getTranslation().get(1))
-                                   targetTrackable = trackable;
-                            }
-
-                            telemetry.addData("Visible Skystone", trackable.getName());
-                            telemetry.update();
-
-                            targetVisible = true;
-                            break;
-                        }
-                    }
-                    if(targetTrackable != null) {
-                        lastYPos = targetTrackable.getLocation().getTranslation().get(1);
-                        lastXPos = targetTrackable.getLocation().getTranslation().get(0);
-                        lastHeadingPos = Orientation.getOrientation(targetTrackable.getLocation(), EXTRINSIC, XYZ, DEGREES).thirdAngle;
-                        drive.gyroTurn(-lastHeadingPos);
-
-                        if(lastYPos > targetYPos){
-
-                            drive.driveRight(1);
-
-                        } else if (lastYPos < targetYPos ){
-
-                            drive.driveRight(-1);
-
-                        }
-
-                        if (lastXPos > targetXPos){
-                            drive.driveForward(1);
-                        }
-                        else if (lastXPos < targetXPos)
-                            drive.driveForward(-1);
-
-                        if ((Math.round(lastXPos) == Math.round(targetXPos))&&(Math.round(lastYPos) == Math.round(targetYPos))&&(Math.round(lastHeadingPos) == Math.round(targetHeadingPos)) ){
-                            drive.stop();
-                            break;
-                        }
-
-                    } else{
-                        drive.stop();
-
-                    }
-
-
                 }
 
+                    switch(startPos) {
+                        case "red1":
 
-                drive.gyroTurn(-90);
-                intake.takeInTime(1, 3);
+//                telemetry.addData("Quadrant", "red1");
+//                telemetry.update();
+//
+//                double lastYPos = 0;
+//                double lastXPos = 0;
+//                double lastHeadingPos = 0;
+//                double targetYPos = -8;
+//                double targetXPos = 24;
+//                double targetHeadingPos = 0;
+
+
+                drive.gyroTurn(93);
+                drive.driveForwardTime(-1, 0.2);
+                drive.driveRightTime(1 , 0.78);
+
+                Boolean searching = true;
+                while(searching){
+                    if( color.getG() < 2 && color.getR() < 2){
+                     drive.driveForward(0);
+                     searching = false;
+
+                    }
+                    else{
+                        drive.driveForward(-0.3);
+                    }
+                }
+                thread.sleep(1500);
+                drive.driveForwardTime(1, 0.4);
+                drive.driveRightTime(1, 0.7);
+                drive.driveForwardTime(-1, 0.4);
+//                telemetry.addData("get Yaw", drive.getYaw());
+//                telemetry.update();
+//                while (!isStopRequested()) {
+//                    VuforiaTrackable targetTrackable = null;
+//
+//
+//                    for (VuforiaTrackable trackable : allTrackables) {
+//                        if (((VuforiaTrackableDefaultListener) trackable.getListener()).isVisible()) {
+//                            if (trackable.getName() == "Stone Target") {
+//                               if(targetTrackable == null)
+//                                   targetTrackable = trackable;
+//                               else if (targetTrackable.getLocation().getTranslation().get(1) <= trackable.getLocation().getTranslation().get(1))
+//                                   targetTrackable = trackable;
+//                            }
+//
+//                            telemetry.addData("Visible Skystone", trackable.getName());
+//                            telemetry.update();
+//
+//                            targetVisible = true;
+//                            break;
+//                        }
+//                    }
+//                    if(targetTrackable != null) {
+//                        lastYPos = targetTrackable.getLocation().getTranslation().get(1);
+//                        lastXPos = targetTrackable.getLocation().getTranslation().get(0);
+//                        lastHeadingPos = Orientation.getOrientation(targetTrackable.getLocation(), EXTRINSIC, XYZ, DEGREES).thirdAngle;
+//                        drive.gyroTurn(-lastHeadingPos);
+//
+//                        if(lastYPos > targetYPos){
+//
+//                            drive.driveRight(1);
+//
+//                        } else if (lastYPos < targetYPos ){
+//
+//                            drive.driveRight(-1);
+//
+//                        }
+//
+//                        if (lastXPos > targetXPos){
+//                            drive.driveForward(1);
+//                        }
+//                        else if (lastXPos < targetXPos)
+//                            drive.driveForward(-1);
+//
+//                        if ((Math.round(lastXPos) == Math.round(targetXPos))&&(Math.round(lastYPos) == Math.round(targetYPos))&&(Math.round(lastHeadingPos) == Math.round(targetHeadingPos)) ){
+//                            drive.stop();
+//                            break;
+//                        }
+//
+//                    } else{
+//                        drive.stop();
+//
+//                    }
+//
+//
+//                }
+
+
+//                drive.gyroTurn(-90);
+////                intake.takeInTime(1, 3);
 
                 break;
             case "red2":
@@ -278,6 +301,9 @@ public class AutoOld9330 extends LinearOpMode implements Runnable {
         pGrabber = new PlatformGrabber9330(robot9330);
         pGrabber.init();
         arm = new Arm9330(robot9330);
+        armStartPos = arm.getEncoderValue();
+        color = new ColorSensor9330(robot9330);
+        color.init();
 
     }
 
@@ -411,7 +437,10 @@ public class AutoOld9330 extends LinearOpMode implements Runnable {
     @Override
     public void run(){
         while(true){
-            telemetry.addData("getYaw",drive.getYaw());
+//            telemetry.addData("getYaw",drive.getYaw());
+            telemetry.addData("getRed: ", color.getR());
+            telemetry.addData("getGreen: ", color.getG());
+            telemetry.addData("getBlue: ", color.getB());
             telemetry.update();
         }
     }

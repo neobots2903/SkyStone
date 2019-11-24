@@ -46,6 +46,10 @@ public class Arm9330 {
 
     }
 
+    public int getEncoderValue(){
+        return hwMap.arm.getCurrentPosition();
+    }
+
     public void stop (){
         hwMap.arm.setPower(0);
     }

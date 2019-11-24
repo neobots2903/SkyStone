@@ -51,8 +51,7 @@ import com.qualcomm.robotcore.hardware.SwitchableLight;
  * Use Android Studio to Copy this Class, and Paste it into your team's code folder with a new name.
  * Remove or comment out the @Disabled line to add this opmode to the Driver Station OpMode list
  */
-@TeleOp(name = "Sensor: Color", group = "Sensor")
-@Disabled
+@TeleOp(name = "Sensor: Color", group = "OpMode")
 public class SensorColor extends LinearOpMode {
 
   /** The colorSensor field will contain a reference to our color sensor hardware object */
@@ -77,7 +76,7 @@ public class SensorColor extends LinearOpMode {
     // Get a reference to the RelativeLayout so we can later change the background
     // color of the Robot Controller app to match the hue detected by the RGB sensor.
     int relativeLayoutId = hardwareMap.appContext.getResources().getIdentifier("RelativeLayout", "id", hardwareMap.appContext.getPackageName());
-    relativeLayout = ((Activity) hardwareMap.appContext).findViewById(relativeLayoutId);
+    relativeLayout = ((Activity) hardwareMap            .appContext).findViewById(relativeLayoutId);
 
     try {
       runSample(); // actually execute the sample
@@ -108,7 +107,7 @@ public class SensorColor extends LinearOpMode {
     colorSensor = hardwareMap.get(NormalizedColorSensor.class, "sensor_color");
 
     // If possible, turn the light on in the beginning (it might already be on anyway,
-    // we just make sure it is if we can).
+    //    // we just make sure it is if we can).
     if (colorSensor instanceof SwitchableLight) {
       ((SwitchableLight)colorSensor).enableLight(true);
     }
