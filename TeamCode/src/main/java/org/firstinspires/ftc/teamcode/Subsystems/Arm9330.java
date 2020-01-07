@@ -29,10 +29,10 @@ public class Arm9330 {
 
     public void moveToPos (double power, int position){
 
+        hwMap.arm.setTargetPosition(position);
+        hwMap.arm.setMode(DcMotor.RunMode.RUN_TO_POSITION);
+        hwMap.arm.setPower(power);
 
-            hwMap.arm.setMode(DcMotor.RunMode.RUN_TO_POSITION);
-            hwMap.arm.setPower(power);
-            hwMap.arm.setTargetPosition(position);
 
 
     }

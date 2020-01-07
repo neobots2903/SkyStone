@@ -31,6 +31,15 @@ public class Drive9330 {
         hwMap.leftBack.setPower(power);
     }
 
+    public void turnClockwiseTime(double power, double seconds) {
+        long targetTime = System.currentTimeMillis() + (long)(seconds * 1000);
+        while (targetTime > System.currentTimeMillis()) {
+            turnClockwise(power);
+        }
+        stop();
+
+    }
+
 
     public void gyroTurn(double targetAngle){
 

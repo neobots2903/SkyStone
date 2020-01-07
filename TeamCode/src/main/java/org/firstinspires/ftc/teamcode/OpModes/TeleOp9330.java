@@ -105,7 +105,7 @@ public class TeleOp9330 extends OpMode {
 //            arm.moveToPos(1, arm.getEncoderTarget()+10);
 //        }
         if(Math.abs(gamepad2.left_stick_y) > 0.1) {
-            arm.moveToPos(1, (int) (arm.getEncoderTarget() + gamepad2.left_stick_y * 20));
+                arm.moveToPos(1, (int) (arm.getEncoderTarget() + gamepad2.left_stick_y * 10));
         }
 
         //drive.spinEverythingWow(gamepad2.left_stick_y);
@@ -114,23 +114,24 @@ public class TeleOp9330 extends OpMode {
         float xPower = gamepad1.left_stick_x;
         float averagePower = (Math.abs(gamepad1.left_stick_y) + Math.abs(gamepad1.left_stick_x))/2;
 
-        if (yPower != 0 && Math.abs(xPower) < 0.4) {
+        if (Math.abs(yPower) > 0.1) {
             drive.driveForward(-yPower);
-        } else if (xPower != 0 && Math.abs(yPower) < 0.4){
+        } else if (Math.abs(xPower) > 0.1){
             drive.driveRight(xPower);
-        } else if (yPower > 0.5 && xPower > 0.5) {
-            telemetry.addData("Program: ", "top right");
-            drive.driveTopRight(averagePower);
-        } else if (yPower < 0.5 && xPower < 0.5){
-            telemetry.addData("Program: ", "bottom left");
-            drive.driveTopRight(-averagePower);
-        } else if (yPower < 0.5 && xPower > 0.5) {
-            telemetry.addData("Program: ", "top left");
-            drive.driveTopLeft(averagePower);
-        } else if (yPower > 0.5 && xPower < 0.5){
-            telemetry.addData("Program: ", "bottom right");
-            drive.driveTopLeft(-averagePower);
         }
+//        else if (yPower > 0.5 && xPower > 0.5) {
+//            telemetry.addData("Program: ", "top right");
+//            drive.driveTopRight(averagePower);
+//        } else if (yPower < 0.5 && xPower < 0.5){
+//            telemetry.addData("Program: ", "bottom left");
+//            drive.driveTopRight(-averagePower);
+//        } else if (yPower < 0.5 && xPower > 0.5) {
+//            telemetry.addData("Program: ", "top left");
+//            drive.driveTopLeft(averagePower);
+//        } else if (yPower > 0.5 && xPower < 0.5){
+//            telemetry.addData("Program: ", "bottom right");
+//            drive.driveTopLeft(-averagePower);
+//        }
 
         drive.turnClockwise(-gamepad1.right_stick_x );
 //        drive.turnCounterClockwise(gamepad1.dpad_right ? 1 : 0);

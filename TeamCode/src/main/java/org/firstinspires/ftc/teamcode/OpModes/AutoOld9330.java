@@ -28,7 +28,7 @@ import static org.firstinspires.ftc.robotcore.external.navigation.AxesOrder.YZX;
 import static org.firstinspires.ftc.robotcore.external.navigation.AxesReference.EXTRINSIC;
 import static org.firstinspires.ftc.robotcore.external.navigation.VuforiaLocalizer.CameraDirection.BACK;
 
-@Autonomous(name = "AutoOld", group = "Opmode")
+@Autonomous(name = "AutoOld9330", group = "Opmode")
 public class AutoOld9330 extends LinearOpMode implements Runnable {
 
     /**
@@ -91,6 +91,7 @@ public class AutoOld9330 extends LinearOpMode implements Runnable {
 
     int armStartPos = 0;
 
+
     @Override
     public void runOpMode() throws InterruptedException {
         telemetry.addData("State", "init");
@@ -103,7 +104,7 @@ public class AutoOld9330 extends LinearOpMode implements Runnable {
         telemetry.update();
         waitForStart();
 
-        arm.moveToPos(1, 400+armStartPos);
+        arm.moveToPos(1, 500+armStartPos);
         Thread.sleep(1000);
         targetsSkyStone.activate();
         telemetry.addData("State", "skystone target activated");
@@ -114,16 +115,18 @@ public class AutoOld9330 extends LinearOpMode implements Runnable {
         while (true) {
             telemetry.addData("State", "Driving backwards");
             telemetry.update();
-            drive.driveForwardTime(0.7, 0.35);
+            if (System.currentTimeMillis() < 3000)
+                drive.driveForward(0.7);
+
             for (VuforiaTrackable trackable : allTrackables) {
                 if (((VuforiaTrackableDefaultListener)trackable.getListener()).isVisible()) {
                     if(trackable.getName() == "Red Perimeter 2"){
                         startPos = "red1";
                     } else if(trackable.getName() == "Red Perimeter 1"){
                         startPos = "red2";
-                    } else if(trackable.getName() == "Blue Perimeter 2"){
-                        startPos = "blue1";
                     } else if(trackable.getName() == "Blue Perimeter 1"){
+                        startPos = "blue1";
+                    } else if(trackable.getName() == "Blue Perimeter 2"){
                         startPos = "blue2";
                     }
 
@@ -178,8 +181,8 @@ public class AutoOld9330 extends LinearOpMode implements Runnable {
 //            telemetry.update();
                 }
 
-                    switch(startPos) {
-                        case "red1":
+        switch(startPos) {
+            case "red1":
 
 //                telemetry.addData("Quadrant", "red1");
 //                telemetry.update();
@@ -193,21 +196,27 @@ public class AutoOld9330 extends LinearOpMode implements Runnable {
 
 
                 drive.gyroTurn(93);
-                drive.driveForwardTime(-1, 0.2);
+                drive.driveForwardTime(-1, 0.3);
                 drive.driveRightTime(1 , 0.78);
-
+                thread.sleep(2000);
                 Boolean searching = true;
+                double beforeWhile = System.currentTimeMillis();
+                double afterWhile = 0;
                 while(searching){
                     if( color.getG() < 2 && color.getR() < 2){
                      drive.driveForward(0);
                      searching = false;
+                     afterWhile = System.currentTimeMillis();
 
                     }
                     else{
                         drive.driveForward(-0.3);
                     }
                 }
-                thread.sleep(1500);
+                double searchingTime = (afterWhile - beforeWhile)/1000;
+                telemetry.addData("searchingTime: ", searchingTime);
+                telemetry.update();
+                thread.sleep(2000);
                 drive.driveForwardTime(1, 0.4);
                 drive.driveRightTime(1, 0.7);
                 drive.driveForwardTime(-1, 0.4);
@@ -271,19 +280,53 @@ public class AutoOld9330 extends LinearOpMode implements Runnable {
 
 //                drive.gyroTurn(-90);
 ////                intake.takeInTime(1, 3);
+                drive.gyroTurn(180);
+                drive.driveRightTime(1, 0.5);
+                drive.driveForwardTime(-1,1.5+searchingTime);
+                drive.driveForwardTime(1, 0.6);
 
                 break;
             case "red2":
 
                 drive.gyroTurn(-90);
                 drive.driveForwardTime(-1, 0.9);
-                drive.driveRightTime(-1, 0.55);
+                drive.driveRightTime(-1, 1.1);
                 pGrabber.close();
                 thread.sleep(1000);
-                drive.driveRightTime(1, 1.7);
+                drive.driveRightTime(1, 2);
+                drive.turnClockwiseTime(-1, 0.8);
+                thread.sleep(1000);
+
                 pGrabber.open();
                 thread.sleep(1000);
-                drive.driveForwardTime(1,2.35);
+                drive.turnClockwiseTime(1, 0.35);
+                arm.moveToPos(1, 200+armStartPos);
+
+                drive.driveForwardTime(1,1.5);
+                drive.driveRightTime(-1, 1.1);
+                drive.driveForwardTime(1,0.7);
+                break;
+            case "blue2":
+                telemetry.addData("State: ", "blue2 running");
+                telemetry.update();
+
+                drive.gyroTurn(-90);
+                drive.driveForwardTime(1, 0.9);
+                drive.driveRightTime(-1, 1.1);
+                pGrabber.close();
+                thread.sleep(1000);
+                drive.driveRightTime(1, 2);
+                drive.turnClockwiseTime(1, 0.8);
+                thread.sleep(1000);
+
+                pGrabber.open();
+                thread.sleep(1000);
+                drive.turnClockwiseTime(-1, 0.35);
+                arm.moveToPos(1, 100+armStartPos);
+
+                drive.driveForwardTime(-1,1.3);
+                drive.driveRightTime(-1, 1.1);
+                drive.driveForwardTime(-1,0.7);
                 break;
         }
 
@@ -436,13 +479,7 @@ public class AutoOld9330 extends LinearOpMode implements Runnable {
 
     @Override
     public void run(){
-        while(true){
-//            telemetry.addData("getYaw",drive.getYaw());
-            telemetry.addData("getRed: ", color.getR());
-            telemetry.addData("getGreen: ", color.getG());
-            telemetry.addData("getBlue: ", color.getB());
-            telemetry.update();
-        }
+
     }
 
 }
